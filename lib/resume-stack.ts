@@ -65,7 +65,7 @@ export class ResumeStack extends cdk.Stack {
       description: 'HTTP API for resume visitor counter',
       corsPreflight: {
         allowOrigins: ['https://resume.nine3one2.com'],
-        allowMethods: [apigateway.HttpMethod.GET, apigateway.HttpMethod.OPTIONS],
+        allowMethods: [apigateway.CorsHttpMethod.GET, apigateway.CorsHttpMethod.OPTIONS],
         allowHeaders: ['Content-Type'],
         maxAge: cdk.Duration.hours(24),
       },
@@ -94,19 +94,18 @@ export class ResumeStack extends cdk.Stack {
     const certificate = new acm.Certificate(this, 'ResumeCertificate', {
       domainName: 'resume.nine3one2.com',
       validation: acm.CertificateValidation.fromDns(hostedZone),
-      description: 'SSL certificate for resume.nine3one2.com',
     });
 
     // Origin Access Control (OAC) for S3
-    const oac = new cloudfront.OriginAccessControl(this, 'ResumeOAC', {
-      comment: 'OAC for resume.nine3one2.com S3 bucket',
+    const oac = new cloudfront.S3OriginAccessControl(this, 'ResumeOAC', {
+      description: 'OAC for resume.nine3one2.com S3 bucket',
     });
 
     // CloudFront Distribution
     const distribution = new cloudfront.Distribution(this, 'ResumeDistribution', {
       defaultBehavior: {
         origin: new cloudfrontOrigins.S3Origin(frontendBucket, {
-          originAccessControl: oac,
+          originAccessControlId: oac.originAccessControlId,
         }),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
@@ -138,7 +137,7 @@ export class ResumeStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
         actions: ['s3:GetObject'],
-        resources: [frontendBucket.arnForObjects('*')],
+        resources: [`${frontendBucket.bucketArn}/*`],
         conditions: {
           StringEquals: {
             'AWS:SourceArn': `arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${distribution.distributionId}`,
@@ -236,7 +235,7 @@ export class ResumeStack extends cdk.Stack {
   }
 
   public visitorCounterTable: dynamodb.Table;
-  public frontendBucket: s3.Bucket;
+  public frontendBucket: s3.IBucket;
   public hostedZone: route53.IHostedZone;
   public counterLambda: lambda.Function;
   public httpApi: apigateway.HttpApi;
