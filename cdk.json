@@ -1,0 +1,10 @@
+{
+  "app": "ts-node bin/resume.ts",
+  "context": {
+    "availability_zones:account=079446008233:region=us-east-1": [
+      "us-east-1a",
+      "us-east-1b",
+      "us-east-1c"
+    ]
+  }
+}

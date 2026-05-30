@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remy De La Cruz | Software Engineer</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #2563eb;
+            --text-color: #334155;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 40px 20px;
+        }
+
+        .resume-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 45px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .contact-info a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 3px;
+            margin-bottom: 12px;
+        }
+
+        .skills-block {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .skills-block strong {
+            color: var(--primary-color);
+        }
+
+        .job, .project {
+            margin-bottom: 20px;
+        }
+
+        .job-header, .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 3px;
+        }
+
+        .job-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+
+        .company-name {
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .date-range {
+            font-style: italic;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        ul {
+            list-style-type: square;
+            margin-left: 18px;
+            font-size: 0.95rem;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            .resume-container { padding: 20px; }
+            .job-header, .project-header { flex-direction: column; }
+            .date-range { margin-top: 2px; }
+        }
+
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .visitor-counter.loading {
+            opacity: 0.6;
+        }
+
+        .visitor-counter.error {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+
+<div class="resume-container">
+    <header>
+        <h1>REMY DE LA CRUZ</h1>
+        <div class="contact-info">
+            <span>📧 remydlc@gmail.com</span>
+            <span>🔗 <a href="https://linkedin.com/in/remydlc" target="_blank">linkedin.com/in/remydlc</a></span>
+        </div>
+    </header>
+
+    <section id="skills">
+        <h2>Technical Skills</h2>
+        <div class="skills-block"><strong>Languages:</strong> Python, Go, Java, TypeScript, Ruby, Bash, SQL</div>
+        <div class="skills-block"><strong>Frameworks & Tools:</strong> Spring Boot, RESTful APIs, AWS CDK, Docker, Kubernetes, Jenkins CI/CD, Prometheus, Grafana, Gitea</div>
+        <div class="skills-block"><strong>Cloud & Database:</strong> AWS (S3, Lambda, CloudFormation, EC2, EMR), PostgreSQL, MySQL, DynamoDB</div>
+    </section>
+
+    <section id="experience">
+        <h2>Professional Experience</h2>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Amazon Dedicated Cloud Engineer II</span>
+                <span class="date-range">August 2024 – Present</span>
+            </div>
+            <div class="company-name">Amazon Web Services (AWS)</div>
+            <ul>
+                <li>Implemented a cross-domain alarm synchronization framework in TypeScript and Java across more than 50 distinct services, successfully mirroring operational alert states between highside and lowside cloud partitions to improve service visibility.</li>
+                <li>Drive automation excellence by developing custom Python microservices and serverless applications using AWS Lambda, streamlining deployment workflows via CI/CD pipelines.</li>
+                <li>Spearhead infrastructure modernization by designing reusable Infrastructure as Code (IaC) architectures using AWS CDK and CloudFormation for mission-critical government-dedicated partitions.</li>
+                <li>Conduct regular security assessments and build automated compliance workflows to maintain strict alignment with government security standards.</li>
+                <li>Provide technical mentorship and hands-on guidance to junior engineers, fostering team growth and documentation excellence.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Systems Engineer II – S3</span>
+                <span class="date-range">January 2021 – August 2024</span>
+            </div>
+            <div class="company-name">Amazon Web Services (AWS)</div>
+            <ul>
+                <li>Contributed to core internal tooling and services utilizing Python, TypeScript, and Ruby to automate infrastructure deployment and enhance global service reliability.</li>
+                <li>Engineered an automated filesystem cleanup and fleet maintenance utility, permanently eliminating recurring manual toil and saving an average of 8 engineering hours per month.</li>
+                <li>Deeply analyzed complex cloud service interdependencies to isolate root causes and proactively mitigate global system variances before customer impact.</li>
+                <li>Authored automation pipelines to streamline the deployment of new region infrastructure and cloud-native services.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Support Engineer IV, AWS – S3</span>
+                <span class="date-range">April 2019 – April 2021</span>
+            </div>
+            <div class="company-name">Amazon Web Services (AWS)</div>
+            <ul>
+                <li>Programmed custom Python and Bash scripts to automate redundant operational tasks and enhance deep-dive troubleshooting workflows for core S3 storage services.</li>
+                <li>Participated in software and architectural design reviews with core development teams to isolate support risks and optimize system metrics.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Senior UNIX / Storage Engineer</span>
+                <span class="date-range">October 2005 – March 2019</span>
+            </div>
+            <div class="company-name">NBC Universal – Comcast / CompuCom</div>
+            <ul>
+                <li>Developed custom Bash scripts to automate monitoring, log aggregation, and alerting metrics across a complex fleet of over 2,000+ Linux/UNIX servers.</li>
+                <li>Administered massive-scale SAN/NAS infrastructure (100+ Petabytes), executing performance optimization, capacity planning, and hardware lifecycle management.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>Projects & Labs</h2>
+
+        <div class="project">
+            <div class="project-header">
+                <span class="job-title">Home Laboratory & DevOps Pipeline (Kubernetes / Jenkins)</span>
+                <span class="date-range">Personal Infrastructure</span>
+            </div>
+            <ul>
+                <li>Designed and operate a private cloud infrastructure utilizing a self-hosted Kubernetes cluster deployed automatically through a custom Jenkins CI/CD pipeline.</li>
+                <li>Deploy and maintain production-ready microservices and pods including Nextcloud for personal storage, Gitea for source control, and a full Prometheus/Grafana monitoring stack.</li>
+            </ul>
+        </div>
+
+        <div class="project">
+            <div class="project-header">
+                <span class="job-title">Student Management System (Spring Boot / Java)</span>
+                <span class="date-range">Academic Project</span>
+            </div>
+            <ul>
+                <li>Designed and developed a full-stack student management application utilizing Java and the Spring Boot framework to build a software-as-a-service (SaaS) model student enrollment platform.</li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<!-- Visitor Counter -->
+<div id="visitor-counter" class="visitor-counter loading">
+    Loading visitor count...
+</div>
+
+<script>
+    // API Endpoint - will be replaced by GitHub Actions during deployment
+    const API_ENDPOINT = '';
+
+    async function incrementCounter() {
+        const counterDiv = document.getElementById('visitor-counter');
+        
+        if (!API_ENDPOINT) {
+            counterDiv.textContent = '📊 Counter: Offline';
+            counterDiv.classList.add('error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_ENDPOINT}/counter`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            counterDiv.textContent = `👁️ Visitors: ${data.total_visitors}`;
+            counterDiv.classList.remove('loading', 'error');
+        } catch (error) {
+            console.error('Error incrementing counter:', error);
+            counterDiv.textContent = '📊 Counter: Error';
+            counterDiv.classList.add('error');
+            counterDiv.classList.remove('loading');
+        }
+    }
+
+    // Increment counter when page loads
+    document.addEventListener('DOMContentLoaded', incrementCounter);
+</script>
+
+</body>
+</html>

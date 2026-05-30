@@ -1,0 +1,33 @@
+{
+  "name": "resume-infrastructure",
+  "version": "1.0.0",
+  "description": "AWS CDK infrastructure for serverless resume website",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "cdk:synth": "cdk synth",
+    "cdk:deploy": "cdk deploy --require-approval never",
+    "cdk:destroy": "cdk destroy",
+    "start": "ts-node bin/resume.ts"
+  },
+  "keywords": [
+    "cdk",
+    "aws",
+    "resume"
+  ],
+  "author": "Remy",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "aws-cdk": "^2.257.0",
+    "ts-node": "^10.9.0",
+    "typescript": "~5.0.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.257.0",
+    "constructs": "^10.0.0"
+  }
+}

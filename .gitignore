@@ -9,7 +9,21 @@
 *.user
 *.userosscache
 *.sln.docstates
+
+# Environment & Secrets
 *.env
+.env.local
+.env.*.local
+
+# AWS CDK
+cdk.context.json
+cdk.out/
+dist/
+
+# Resume artifacts (not part of infrastructure)
+HANDOFF.md
+DevOps_Resume_0526.html
+SWE_Resume_0526.html
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

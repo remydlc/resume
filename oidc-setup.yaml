@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Setup GitHub OIDC Provider and CDK Deployment IAM Role for resume infrastructure'
+
+Parameters:
+  GitHubOrg:
+    Type: String
+    Default: remydlc
+    Description: GitHub organization/username
+  GitHubRepo:
+    Type: String
+    Default: resume
+    Description: GitHub repository name
+  GitHubBranch:
+    Type: String
+    Default: main
+    Description: GitHub branch to deploy from
+
+Resources:
+  # OIDC Identity Provider for GitHub
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+        - 1b511abead59c6ce207077c0ef0285191222a8fb  # Additional thumbprint for redundancy
+
+  # IAM Role for GitHub Actions to assume
+  CDKDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GitHubActionsCDKDeployRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub 'arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com'
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'token.actions.githubusercontent.com:aud': sts.amazonaws.com
+              StringLike:
+                'token.actions.githubusercontent.com:sub': !Sub 'repo:${GitHubOrg}/${GitHubRepo}:ref:refs/heads/${GitHubBranch}'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      MaxSessionDuration: 3600
+      Description: Role for GitHub Actions to deploy CDK infrastructure
+
+Outputs:
+  OIDCProviderArn:
+    Description: ARN of the GitHub OIDC Provider
+    Value: !GetAtt GitHubOIDCProvider.Arn
+    Export:
+      Name: GitHubOIDCProviderArn
+
+  CDKDeploymentRoleArn:
+    Description: ARN of the CDK Deployment Role for GitHub Actions
+    Value: !GetAtt CDKDeploymentRole.Arn
+    Export:
+      Name: CDKDeploymentRoleArn
+
+  CDKDeploymentRoleName:
+    Description: Name of the CDK Deployment Role
+    Value: !Ref CDKDeploymentRole
+    Export:
+      Name: CDKDeploymentRoleName
