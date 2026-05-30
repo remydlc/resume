@@ -9,6 +9,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -107,11 +108,11 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 func incrementCounter(ctx context.Context) (*CounterResponse, error) {
 	// Use UpdateItem with atomic increment
 	updateOutput, err := dynamodbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-		TableName: &tableName,
+		TableName: aws.String(tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{Value: "total_visitors"},
 		},
-		UpdateExpression:       "ADD #count :inc",
+		UpdateExpression: aws.String("ADD #count :inc"),
 		ExpressionAttributeNames: map[string]string{
 			"#count": "count",
 		},
