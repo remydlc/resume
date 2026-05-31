@@ -5,7 +5,6 @@ import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigatewayv2';
 import * as apigatewayIntegrations from 'aws-cdk-lib/aws-apigatewayv2-integrations';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as cloudfrontOrigins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
@@ -32,9 +31,6 @@ export class ResumeStack extends cdk.Stack {
         pointInTimeRecoveryEnabled: true,
       },
     });
-
-    // Initialize the counter item (this is informational; actual init happens via Lambda)
-    cdk.Tags.of(visitorCounterTable).add('InitialItem', 'id=total_visitors, count=0');
 
     // S3 Bucket for Frontend (Import existing bucket)
     const frontendBucket = s3.Bucket.fromBucketName(this, 'FrontendBucket', 'resume.nine3one2.com');
@@ -96,17 +92,10 @@ export class ResumeStack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
 
-    // Origin Access Control (OAC) for S3
-    const oac = new cloudfront.S3OriginAccessControl(this, 'ResumeOAC', {
-      description: 'OAC for resume.nine3one2.com S3 bucket',
-    });
-
     // CloudFront Distribution
     const distribution = new cloudfront.Distribution(this, 'ResumeDistribution', {
       defaultBehavior: {
-        origin: new cloudfrontOrigins.S3Origin(frontendBucket, {
-          originAccessControlId: oac.originAccessControlId,
-        }),
+        origin: cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(frontendBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
         compress: true,
@@ -130,21 +119,6 @@ export class ResumeStack extends cdk.Stack {
         },
       ],
     });
-
-    // Update S3 bucket policy to allow CloudFront OAC access
-    frontendBucket.addToResourcePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
-        actions: ['s3:GetObject'],
-        resources: [`${frontendBucket.bucketArn}/*`],
-        conditions: {
-          StringEquals: {
-            'AWS:SourceArn': `arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${distribution.distributionId}`,
-          },
-        },
-      })
-    );
 
     // Route 53 A Record (IPv4) pointing to CloudFront
     new route53.ARecord(this, 'ResumeARecord', {
