@@ -45,22 +45,23 @@ func init() {
 	}
 }
 
-// Handler processes the API Gateway event and increments the visitor counter
-func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Printf("Request: %s %s", request.HTTPMethod, request.Path)
+// Handler processes the API Gateway HTTP API v2 event and increments the visitor counter
+func Handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	method := request.RequestContext.HTTP.Method
+	log.Printf("Request: %s %s", method, request.RawPath)
 
 	// CORS headers to allow resume.nine3one2.com
 	corsHeaders := map[string]string{
-		"Access-Control-Allow-Origin":      "https://resume.nine3one2.com",
-		"Access-Control-Allow-Methods":     "GET, POST, OPTIONS",
-		"Access-Control-Allow-Headers":     "Content-Type",
-		"Access-Control-Max-Age":           "86400",
-		"Content-Type":                     "application/json",
+		"Access-Control-Allow-Origin":  "https://resume.nine3one2.com",
+		"Access-Control-Allow-Methods": "GET, OPTIONS",
+		"Access-Control-Allow-Headers": "Content-Type",
+		"Access-Control-Max-Age":       "86400",
+		"Content-Type":                 "application/json",
 	}
 
 	// Handle CORS preflight
-	if request.HTTPMethod == "OPTIONS" {
-		return events.APIGatewayProxyResponse{
+	if method == "OPTIONS" {
+		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 200,
 			Headers:    corsHeaders,
 			Body:       "",
@@ -68,8 +69,8 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	}
 
 	// Only allow GET requests to increment counter
-	if request.HTTPMethod != "GET" {
-		return events.APIGatewayProxyResponse{
+	if method != "GET" {
+		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 405,
 			Headers:    corsHeaders,
 			Body:       `{"error": "Method not allowed"}`,
@@ -80,7 +81,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	response, err := incrementCounter(ctx)
 	if err != nil {
 		log.Printf("Error incrementing counter: %v", err)
-		return events.APIGatewayProxyResponse{
+		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,
 			Headers:    corsHeaders,
 			Body:       fmt.Sprintf(`{"error": "%s"}`, err.Error()),
@@ -90,14 +91,14 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	// Marshal response
 	responseBody, err := json.Marshal(response)
 	if err != nil {
-		return events.APIGatewayProxyResponse{
+		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,
 			Headers:    corsHeaders,
 			Body:       `{"error": "Failed to marshal response"}`,
 		}, nil
 	}
 
-	return events.APIGatewayProxyResponse{
+	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
 		Headers:    corsHeaders,
 		Body:       string(responseBody),
